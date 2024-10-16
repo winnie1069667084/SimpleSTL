@@ -1,3 +1,61 @@
+/*
+【题目描述】
+设计一个名为 Deque 的 Deque 类，该类具有以下功能和特性：
+1、基础成员函数
+构造函数：初始化 Deque 实例
+析构函数：清理资源，确保无内存泄露
+2、核心功能
+在 Deque 末尾添加元素
+在 Deque 开头添加元素
+删除 Deque 末尾的元素
+删除 Deque 开头的元素
+获取 Deque 中节点的数量
+删除 Deque 中所有的元素
+3、迭代与遍历
+打印 Deque 中的元素
+4、辅助功能
+重载[]运算符以对 Deque 进行索引访问
+
+【输入描述】
+题目的包含多行输入，第一行为正整数 N, 代表后续有 N 行命令序列。
+接下来 N 行，每行包含一个命令，命令格式为 [operation] [parameters] ，具体命令如下：
+push_back 命令：
+格式：push_back [value]
+功能：在双端队列末尾添加值为 value 的元素
+push_front 命令：
+格式：push_front [value]
+功能：在双端队列开头添加值为 value 的元素
+pop_back 命令：
+格式：pop_back
+功能：删除双端队列末尾的元素
+pop_front 命令：
+格式：pop_front
+功能：删除双端队列开头的元素
+clear 命令：
+格式：clear
+功能：清空双端队列
+size 命令：
+格式：size
+功能：获取双端队列中节点的数量
+get 命令：
+格式：get [index]
+功能：获取双端队列中索引为 index 的节点的值
+print 命令：
+格式：print
+功能：打印双端队列中的元素
+
+【输出描述】
+输出为每行命令执行后的结果，具体输出格式如下：
+push_back 命令：无输出
+push_front 命令：无输出
+pop_back 命令：无输出
+pop_front 命令：无输出
+clear 命令：无输出
+size 命令：输出一个整数，独占一行，代表 Deque 中元素的数量
+get 命令：输出双端队列中索引为 index 的节点的值
+print 命令：输出双端队列中的元素
+*/
+
 #include <iostream>
 #include <sstream>
 #include <string>
