@@ -224,12 +224,13 @@ private:
             return;
         } else if (del->left) { // 2.del只有左孩子
             child = del->left;
-            replaceNode(del, del->left);
+            replaceNode(del, child);
         } else if (del->right) { // 3.del只有右孩子
             child = del->right;
             replaceNode(del, child);
         } else { // 4.del没有孩子
-            if (del == del->parent->left) del->parent->left = nullptr;
+            if (del == _root) _root = _nil;
+            else if (del == del->parent->left) del->parent->left = nullptr;
             else del->parent->right = nullptr;
         }
         delete del;
