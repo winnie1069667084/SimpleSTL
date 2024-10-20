@@ -68,7 +68,7 @@ class HashTable {
         
         bool operator==(const HashNode& other) const { return key == other.key; }
         
-        bool operator!=(const HashNode& other) const { return key == other.key; }
+        bool operator!=(const HashNode& other) const { return key != other.key; }
         
         bool operator<(const HashNode& other) const { return key < other.key; }
         
