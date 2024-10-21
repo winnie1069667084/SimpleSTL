@@ -209,36 +209,86 @@ private:
         }
         _root->color = Color::BLACK; // 始终保持根节点为黑色
     }
-    
+
     void deleteNode(Node* del) {
-        if (del == nullptr) return;
-        Node* child = nullptr; // del的孩子节点
-        Color orig_color = del->color; // 保存del的原初颜色
-        // 1.del同时拥有左右子树
-        if (del->left && del->right) {
-            // 找到del的直接后继rep，并用其替代del，问题转换为删除节点rep
-            Node* rep = findMinimumNode(del->right);
-            del->key = rep->key;
-            del->value = rep->value; // 值复制
-            deleteNode(rep);
-            return;
-        } else if (del->left) { // 2.del只有左孩子
-            child = del->left;
-            replaceNode(del, child);
-        } else if (del->right) { // 3.del只有右孩子
-            child = del->right;
-            replaceNode(del, child);
-        } else { // 4.del没有孩子
-            if (del == _root) _root = _nil;
-            else if (del == del->parent->left) del->parent->left = nullptr;
-            else del->parent->right = nullptr;
+        Node* rep = del; // 替代节点
+        Node* child = nullptr; // 替代节点的孩子节点
+        Node* rep_parent; // 替代节点的父节点
+        Color orig_color = rep->color; // 保存删除节点的原初颜色
+    
+        // 如果删除节点没有左孩子
+        if (!del->left) {
+            rep = del->right;
+            rep_parent = del->parent;
+            orig_color = getColor(rep);
+            replaceNode(del, rep);
+        } else if (!del->right) {
+            rep = del->left;
+            rep_parent = del->parent;
+            orig_color = getColor(rep);
+            replaceNode(del, rep);
+        } else {
+            rep = findMinimumNode(del->right);
+            orig_color = rep->color;
+            // 如果rep不是del的直接右孩子
+            if (rep != del->right) {
+                rep_parent = rep->parent;
+                child = rep->right;
+                rep->parent->left = child;
+                if (child != nullptr) child->parent = rep_parent;
+                del->left->parent = rep;
+                del->right->parent = rep;
+                rep->left = del->left;
+                rep->right = del->right;
+                if (del->parent != nullptr) {
+                    if (del == del->parent->left) {
+                        del->parent->left = rep;
+                        rep->parent = del->parent;
+                    } else {
+                        del->parent->right = rep;
+                        rep->parent = del->parent;
+                    }
+                } else { // 如果删除节点没有父节点说明其为根节点
+                    _root = rep;
+                    rep->parent = nullptr;
+                }
+            } else { // 如果rep是del的直接右孩子
+                child = rep->right;
+                rep->left = del->left;
+                del->left->parent = rep;
+                if (del->parent != nullptr) {
+                    if (del == del->parent->left) {
+                        del->parent->left = rep;
+                        rep->parent = del->parent;
+                    } else {
+                        del->parent->right = rep;
+                        rep->parent = del->parent;
+                    }
+                } else {
+                    _root = rep;
+                    rep->parent = nullptr;
+                }
+                rep_parent = rep;
+            }
+        }
+    
+        if (rep != nullptr) rep->color = del->color;
+        else orig_color = del->color;
+    
+        if (orig_color == Color::BLACK) {
+            if (child != nullptr) {
+                deleteFixup(child);
+            } else {
+                _nil->parent = rep_parent;
+                if (rep_parent != nullptr) {
+                    if (rep_parent->left == nullptr) rep_parent->left = _nil;
+                    else rep_parent->right = _nil;
+                }
+                deleteFixup(_nil);
+                dieConnectNil();
+            }
         }
         delete del;
-        // 处理双黑情况
-        if (orig_color == Color::BLACK) {
-            if (child) deleteFixup(child);
-            else deleteFixup(_nil);
-        }
     }
   
     void deleteFixup(Node* node) {
@@ -352,38 +402,6 @@ private:
         }
     }
 };
-
-int main() {
-    RedBlackTree<int, int> rb_tree;
-    int N;
-    std::cin >> N;
-    getchar();
-    std::string line;
-    while (N--) {
-        std::getline(std::cin, line);
-        std::istringstream iss(line);
-        std::string command;
-        iss >> command;
-        int key, value;
-        if (command == "insert") {
-            iss >> key >> value;
-            rb_tree.insert(key, value);
-        } else if (command == "remove") {
-            iss >> key;
-            rb_tree.remove(key);
-        } else if (command == "at") {
-            iss >> key;
-            int* res = rb_tree.at(key);
-            if (res == nullptr) std::cout << "not exist" << std::endl;
-            else std::cout << *res << std::endl;
-        } else if (command == "size") {
-            std::cout << rb_tree.getSize() << std::endl;
-        } else if (command == "print") {
-            if (rb_tree.empty()) std::cout << "empty" << std::endl;
-            else rb_tree.print();
-        }
-    }
-}
 
 // 左根右，根叶黑，不红红，黑路同
 // 
