@@ -403,6 +403,38 @@ private:
     }
 };
 
+int main() {
+    RedBlackTree<int, int> rb_tree;
+    int N;
+    std::cin >> N;
+    getchar();
+    std::string line;
+    while (N--) {
+        std::getline(std::cin, line);
+        std::istringstream iss(line);
+        std::string command;
+        iss >> command;
+        int key, value;
+        if (command == "insert") {
+            iss >> key >> value;
+            rb_tree.insert(key, value);
+        } else if (command == "remove") {
+            iss >> key;
+            rb_tree.remove(key);
+        } else if (command == "at") {
+            iss >> key;
+            int* res = rb_tree.at(key);
+            if (res == nullptr) std::cout << "not exist" << std::endl;
+            else std::cout << *res << std::endl;
+        } else if (command == "size") {
+            std::cout << rb_tree.getSize() << std::endl;
+        } else if (command == "print") {
+            if (rb_tree.empty()) std::cout << "empty" << std::endl;
+            else rb_tree.print();
+        }
+    }
+}
+
 // 左根右，根叶黑，不红红，黑路同
 // 
 // 在写红黑树代码时，没有图像和情况分析是完全写不出来的
