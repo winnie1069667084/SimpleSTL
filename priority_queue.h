@@ -63,7 +63,7 @@ private:
         }
     }
 
-    void heapifyDown() { // 每次都选择右孩子，可右孩子不一定是最小的孩子
+    void heapifyDown() {
         int index = 0;
         int size = data.size();
         while (true) {
@@ -83,12 +83,6 @@ private:
 
 public:
     PriorityQueue() {}
-
-    PriorityQueue(const Container& c) : data(c) {
-        // 底层容器转换为堆
-        int size = data.size();
-        for (int i = (size / 2) - 1; i >= 0; --i) heapifyDown(); // ?
-    }
 
     void push(const T& value) {
         data.push_back(value);
